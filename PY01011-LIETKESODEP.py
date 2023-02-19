@@ -18,6 +18,6 @@ if __name__ == '__main__':
     TC = int(input())
     for t in range(TC):
         n = int(input())
-        for x in range(1, n):
+        for x in range(22, n):
             if check(x) and palind(x): print(x, end = ' ')
         print()
