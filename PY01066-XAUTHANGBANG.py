@@ -3,10 +3,9 @@ def check(s1, s2):
         if abs(ord(s1[i]) - ord(s1[i - 1])) != abs(ord(s2[i]) - ord(s2[i - 1])): return False
     return True
 
-if __name__ == '__main__':
-    TC = int(input())
-    for t in range(TC):
-        s1 = input()
-        s2 = s1[::-1]
-        if check(s1, s2): print('YES')
-        else: print('NO')
+TC = int(input())
+for t in range(TC):
+    s1 = input()
+    s2 = s1[::-1]
+    if check(s1, s2): print('YES')
+    else: print('NO')
