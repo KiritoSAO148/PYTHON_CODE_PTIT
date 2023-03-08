@@ -26,7 +26,7 @@ def hamming():
 
 if __name__ == '__main__':
     hamming()
-    for t in range(int(input())):
-        n = int(input())
+    for t in range(int(sys.stdin.readline())):
+        n = int(sys.stdin.readline())
         if n in d: print(d[n])
         else: print('Not in sequence')
