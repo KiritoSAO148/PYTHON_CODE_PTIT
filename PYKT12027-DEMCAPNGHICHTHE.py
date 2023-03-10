@@ -25,7 +25,7 @@ def merge(arr, temp_arr, left, mid, right):
         temp_arr[k] = arr[j]
         k += 1
         j += 1
-    for loop_var in range(left, right + 1): arr[loop_var] = temp_arr[loop_var]
+    for i in range(left, right + 1): arr[i] = temp_arr[i]
     return cnt
 
 def countInversion(arr, temp_arr, left, right):
