@@ -41,6 +41,21 @@ class Signal:
     def set_length(self, length):
         self.__length = length
 
+    def get_Info(self):
+        return self.__info
+
+    def set_info(self, info):
+        self.__info = info
+
+    def get_fs(self):
+        return self.__fs
+
+    def set_fs(self, fs):
+        self.__fs = fs
+
+    def __str__(self):
+        return f'{self.__amplitude} {self.__startPos} {self.__fs} {self.__info} {self.__length}'
+
     def getRandSignal(self, length, amplitude, startPos = 0):
         self.__length = length
         self.__amplitude = amplitude
@@ -62,23 +77,25 @@ class Signal:
     def plotResSignal(self, other, signal):
         # self.chuanHoa()
         # other.chuanHoa()
-        # self.chuanHoaArr(other)
-        # self.chuanHoaPos(other)
+        # self.chuanHoaArr(signal)
+        # self.chuanHoaPos(signal)
+        # other.chuanHoaArr(signal)
+        # other.chuanHoaPos(signal)
         indices1 = np.linspace(0, self.__length - 1, self.__length)
         indices1 += self.__startPos
         indices2 = np.linspace(0, other.__length - 1, other.__length)
         indices2 += other.__startPos
         indices = np.linspace(0, signal.__length - 1, signal.__length)
         indices += signal.__startPos
-        print(indices1)
-        print(indices2)
-        print(indices)
-        print(self.__startPos)
-        print(other.__startPos)
-        print(signal.__startPos)
-        print(self.__amplitude)
-        print(other.__amplitude)
-        print(signal.__amplitude)
+        # print(indices1)
+        # print(indices2)
+        # print(indices)
+        # print(self.__startPos)
+        # print(other.__startPos)
+        # print(signal.__startPos)
+        # print(self.__amplitude)
+        # print(other.__amplitude)
+        # print(signal.__amplitude)
         plt.plot(indices, self.__amplitude, label = 'Signal 1')
         plt.plot(indices, other.__amplitude, label = 'Signal 2')
         plt.plot(indices, signal.__amplitude, label = 'Signal Result')
@@ -124,7 +141,8 @@ class Signal:
             for _ in range(self.__startPos): self.__amplitude = np.insert(self.__amplitude, 0, 0)
             self.__startPos = 0
         elif self.__startPos < -len(self.__amplitude):
-            for _ in range(abs(self.__startPos) - len(self.__amplitude) + 1): self.__amplitude = np.insert(self.__amplitude, len(self.__amplitude), 0)
+            for _ in range(abs(self.__startPos) - len(self.__amplitude) + 1):
+                self.__amplitude = np.insert(self.__amplitude, len(self.__amplitude), 0)
             # self.__startPos = -len(self.__amplitude)
         self.__length = len(self.__amplitude)
         # print(self.__amplitude)
@@ -136,12 +154,8 @@ class Signal:
         pos = min(self.__startPos, other.__startPos)
         ampli = self.__amplitude + other.__amplitude
         S = Signal(ampli, pos, 44100, 'Sample Signal Object 3', len(ampli))
-        ampliS = S.get_amplitude()
-        if S.get_startPos() > 0:
-            for _ in range(S.get_startPos()): ampliS = np.insert(ampliS, 0, 0)
-        S2 = Signal(ampliS, pos, 44100, 'Sample', len(ampliS))
-        S2.set_startPos(min(pos, 0))
-        return S2
+        S.chuanHoa()
+        return S
 
     def __sub__(self, other):
         self.chuanHoaArr(other)
@@ -149,12 +163,8 @@ class Signal:
         pos = min(self.__startPos, other.__startPos)
         ampli = self.__amplitude - other.__amplitude
         S = Signal(ampli, pos, 44100, 'Sample Signal Object 3', len(ampli))
-        ampliS = S.get_amplitude()
-        if S.get_startPos() > 0:
-            for _ in range(S.get_startPos()): ampliS = np.insert(ampliS, 0, 0)
-        S2 = Signal(ampliS, pos, 44100, 'Sample', len(ampliS))
-        S2.set_startPos(min(pos, 0))
-        return S2
+        S.chuanHoa()
+        return S
 
     def __mul__(self, other):
         self.chuanHoaArr(other)
@@ -162,17 +172,15 @@ class Signal:
         pos = min(self.__startPos, other.__startPos)
         ampli = self.__amplitude * other.__amplitude
         S = Signal(ampli, pos, 44100, 'Sample Signal Object 3', len(ampli))
-        ampliS = S.get_amplitude()
-        if S.get_startPos() > 0:
-            for _ in range(S.get_startPos()): ampliS = np.insert(ampliS, 0, 0)
-        S2 = Signal(ampliS, pos, 44100, 'Sample', len(ampliS))
-        S2.set_startPos(min(pos, 0))
-        return S2
+        S.chuanHoa()
+        return S
 
     def mul_const(self, const):
+        self.chuanHoa()
         for i in range(self.__length): self.__amplitude[i] *= const
 
     def inverse(self):
+        self.chuanHoa()
         res = np.array([0])
         if self.__startPos < 0:
             a = self.__amplitude[:abs(self.__startPos) + 1]
@@ -196,26 +204,28 @@ class Signal:
         if self.__startPos > 0:
             for _ in range(self.__startPos): self.__amplitude = np.insert(self.__amplitude, 0, 0)
         elif self.__startPos < 0:
-            for _ in range(abs(self.__startPos) - len(self.__amplitude)): self.__amplitude = np.insert(self.__amplitude, len(self.__amplitude), 0)
+            for _ in range(abs(self.__startPos) - len(self.__amplitude)):
+                self.__amplitude = np.insert(self.__amplitude, len(self.__amplitude), 0)
         # self.__amplitude = ampli
         self.getRandSignal(len(self.__amplitude), self.__amplitude, min(0, self.__startPos))
         print(len(self.__amplitude))
         print(self.__amplitude)
-        self.plotSignal()
+        # self.plotSignal()
 
     def early(self, k):
         self.__startPos -= abs(k)
         print(self.__startPos)
         ampli = self.__amplitude
         if abs(self.__startPos) > len(self.__amplitude):
-            for _ in range(abs(self.__startPos) - len(self.__amplitude)): self.__amplitude = np.insert(self.__amplitude, len(self.__amplitude), 0)
+            for _ in range(abs(self.__startPos) - len(self.__amplitude)):
+                self.__amplitude = np.insert(self.__amplitude, len(self.__amplitude), 0)
         # self.__amplitude = ampli
         elif self.__startPos > 0:
             for _ in range(self.__startPos): self.__amplitude = np.insert(self.__amplitude, 0, 0)
         self.getRandSignal(len(self.__amplitude), self.__amplitude, min(0, self.__startPos))
         print(len(self.__amplitude))
         print(self.__amplitude)
-        self.plotSignal()
+        # self.plotSignal()
 
     def energy(self):
         return np.sum(self.__amplitude ** 2)
@@ -341,10 +351,12 @@ def operation():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
     signal2 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 2', 1)
     a = np.array([-1, 2, -5, 0, -4, 4, -4])
-    b = np.array([3, -1, 1, 0, 6, 5])
-    pos1 = 3; pos2 = -1
+    b = np.array([3, -1, 1, 0, 6])
+    pos1 = -3; pos2 = 2
     signal1.getRandSignal(len(a), a, pos1)
     signal2.getRandSignal(len(b), b, pos2)
+    print(signal1.get_amplitude())
+    print(signal2.get_amplitude())
     # signal1.plotSignal()
     # signal2.plotSignal()
     signal = signal1 + signal2
@@ -356,7 +368,6 @@ def mul_const_operation(const):
     a = np.array([-1, 2, -5, 0, -4, 4, -4])
     pos = 3
     signal1.getRandSignal(len(a), a, pos)
-    signal1.chuanHoa()
     signal1.plotSignal()
     signal1.mul_const(const)
     signal1.plotSignal()
@@ -364,9 +375,8 @@ def mul_const_operation(const):
 def inverse():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
     a = np.array([-1, 2, -5, 0, -4, 4, -4])
-    pos = -2
+    pos = 3
     signal1.getRandSignal(len(a), a, pos)
-    signal1.chuanHoa()
     signal1.plotSignal()
     signal1.inverse()
     signal1.plotSignal()
@@ -404,7 +414,7 @@ def convolve():
     signal2 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 2', 1)
     # a = np.array([-1, 2, -5, 0, -4, 4, -4])
     # b = np.array([3, -1, 1, 0, 6, 5])
-    a = np.random.randint(low = -10000, high = 10000, size = 10001, dtype = int)
+    a = np.random.randint(low = -10000, high = 10000, size = 50001, dtype = int)
     b = np.random.randint(low=-1000, high=1000, size=1001, dtype=int)
     pos1 = 3; pos2 = -1
     signal1.getRandSignal(len(a), a, pos1)
@@ -412,18 +422,16 @@ def convolve():
     signal1.chuanHoa()
     signal2.chuanHoa()
     start1 = timeit.default_timer()
-    # signal12 = signal1.convolve1(signal2)
-    signal12 = signal1.convolve2(signal2)
-    signal12.plotSignal()
+    signal12 = signal1.convolve1(signal2)
+    # signal12.plotSignal()
     print(signal12.get_amplitude())
     print(signal12.get_startPos())
     # signal12.plotSignal()
     stop1 = timeit.default_timer()
     start2 = timeit.default_timer()
-    signal22 = signal1.convolve1(signal2)
-    # signal12 = signal1.convolve2(signal2)
-    print(signal12.get_amplitude())
-    print(signal12.get_startPos())
+    signal21 = signal1.convolve2(signal2)
+    print(signal21.get_amplitude())
+    print(signal21.get_startPos())
     # signal12.plotSignal()
     stop2 = timeit.default_timer()
     print(stop1 - start1)
@@ -431,7 +439,8 @@ def convolve():
 
 def dft():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
-    a = np.array([-1, 2, -5, 0, -4, 4, -4])
+    # a = np.array([-1, 2, -5, 0, -4, 4, -4])
+    a = np.random.randint(low=-10000, high=10000, size=5001, dtype=int)
     pos = -2
     signal1.getRandSignal(len(a), a, pos)
     signal1.plotSignal()
@@ -441,15 +450,16 @@ def dft():
     start2 = timeit.default_timer()
     signal1.showdft2()
     stop2 = timeit.default_timer()
-    print(stop1 - start2)
+    print(stop1 - start1)
     print(stop2 - start2)
 
 def idft():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
     a = np.array([-1, 2, -5, 0, -4, 4, -4])
+    # a = np.random.randint(low=-10000, high=10000, size=5001, dtype=int)
     pos = -2
     signal1.getRandSignal(len(a), a, pos)
-    signal1.plotSignal()
+    # signal1.plotSignal()
     start1 = timeit.default_timer()
     x1 = signal1.dft1()
     X1 = signal1.idft1(x1)
@@ -465,10 +475,11 @@ def idft():
 
 def fft():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
-    a = np.array([-1, 2, -5, 0, -4, 4, -4, 7])
+    # a = np.array([-1, 2, -5, 0, -4, 4, -4, 7])
+    a = np.random.randint(low=-10000, high=10000, size=1048576, dtype=int)
     pos = -2
     signal1.getRandSignal(len(a), a, pos)
-    signal1.plotSignal()
+    # signal1.plotSignal()
     start1 = timeit.default_timer()
     print(signal1.fft(a))
     stop1 = timeit.default_timer()
@@ -477,15 +488,17 @@ def fft():
     stop2 = timeit.default_timer()
     print(stop1 - start1)
     print(stop2 - start2)
+    # print(2**20)
 
 def ifft():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
-    a = np.array([-1, 2, -5, 0])
+    # a = np.array([-1, 2, -5, 0, -4, 4, -4, 7])
+    a = np.random.randint(low=-10000, high=10000, size=1048576, dtype=int)
     pos = -2
     signal1.getRandSignal(len(a), a, pos)
-    signal1.plotSignal()
+    # signal1.plotSignal()
     start1 = timeit.default_timer()
-    print(signal1.fft(a))
+    # print(signal1.fft(a))
     x = signal1.ifft(a)
     print(signal1.show_ifft(x))
     stop1 = timeit.default_timer()
@@ -497,18 +510,22 @@ def ifft():
 
 def dct():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
-    a = np.array([-1, 2, -5, 0, -4, 4, -4])
+    # a = np.array([-1, 2, -5, 0, -4, 4, -4])
+    a = np.random.randint(low=-10000, high=10000, size=1048576, dtype=int)
+    print(a)
     pos = -2
     signal1.getRandSignal(len(a), a, pos)
-    signal1.plotSignal()
+    # signal1.plotSignal()
     print(signal1.dct())
     print(signal1.idct())
 
 def cross_correlation():
     signal1 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 1', 1)
     signal2 = Signal(np.array([0]), 0, 44100, 'Sample Signal Object 2', 1)
-    a = np.array([-1, 2, -5, 0, -4, 4, -4])
-    b = np.array([3, -1, 1, 0, 6, 5])
+    # a = np.array([-1, 2, -5, 0, -4, 4, -4])
+    # b = np.array([3, -1, 1, 0, 6, 5])
+    a = np.random.randint(low=-10000, high=10000, size=50001, dtype=int)
+    b = np.random.randint(low=-1000, high=1000, size=1001, dtype=int)
     pos1 = 3; pos2 = -1
     signal1.getRandSignal(len(a), a, pos1)
     signal2.getRandSignal(len(b), b, pos2)
@@ -531,19 +548,31 @@ def auto_correlation():
     pos = -2
     signal1.getRandSignal(len(a), a, pos)
     # signal1.chuanHoa()
-    signal1.plotSignal()
+    # signal1.plotSignal()
+    start = timeit.default_timer()
     print(signal1.auto_correlation())
+    stop = timeit.default_timer()
+    print(stop - start)
 
 def example():
-    data, samplerate = sf.read('my-file-3.wav')
-    signal = Signal(np.array([0]), 0, 44100 * 3, "Sample Signal Object", 0)
-    res = [x[0] for x in data]
-    print(res)
-    print(len(res))
-    signal.getRandSignal(len(res), res, 0)
-    print(len(signal.get_amplitude()))
-    # signal.chuanHoa()
-    signal.plotSignal()
+    data1, samplerate1 = sf.read('my-file-3.wav', frames = 44100 * 3, fill_value = 0)
+    data2, samplerate2 = sf.read('my-file-4.wav', frames = 44100 * 3, fill_value = 0)
+    signal1 = Signal(np.array([0]), 0, 44100 * 3, "Sample Signal Object", 0)
+    signal2 = Signal(np.array([0]), 0, 44100 * 3, "Sample Signal Object", 0)
+    res1 = np.array([x[0] for x in data1])
+    res2 = np.array([x[0] for x in data2])
+    # print(res1 + res2)
+    # print(len(res1))
+    # print(len(res2))
+    signal1.getRandSignal(len(res1), res1, 0)
+    signal2.getRandSignal(len(res2), res2, 0)
+    # signal = signal1 + signal2
+    # print(signal.get_amplitude())
+    # signal1.plotResSignal(signal2, signal)
+    start = timeit.default_timer()
+    print(signal1.auto_correlation())
+    stop = timeit.default_timer()
+    print(stop - start)
 
 if __name__ == '__main__':
     Main.main()
