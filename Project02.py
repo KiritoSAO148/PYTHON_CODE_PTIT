@@ -59,7 +59,7 @@ def plot_barlett_window_2(N):
     plt.plot(w, Wt)
     plt.xlabel('ω')
     plt.ylabel('Wt(ω)')
-    plt.title('Amplitude Response of Rectangular Window')
+    plt.title('Amplitude Response of Barlett Window')
     plt.grid(True)
     plt.show()
 
@@ -380,12 +380,8 @@ def signal_bsf(signal, N, f_c1, f_c2, fs, type_of_window):
     return y
 
 if __name__ == '__main__':
-    # window = rectangular_window(61)
-    # bartlett_window(51)
-    # N = 61
-    window = hanning_window(41)
-    # hamming_window(31)
-    # window = blackman_window(N)
+    N = 51; beta = 5.282
+    kaiser_window(N, beta)
     # type_filter = highpass_filter(4000, N, 22050)
     # lpf(N, 4000, 22050, 'Rectangular Window')
     # signal = np.random.randint(low=-10000, high=10000, size=101)
@@ -410,3 +406,7 @@ if __name__ == '__main__':
     filter_order = 100
     # window = hamming_window(101)
     # eqf(num_lpf, lpf_cutoff_freqs, num_bpf, bpf_cutoff_freqs, num_hpf, hpf_cutoff_freqs, filter_order, 'blackman', 44100)
+    # window = rectangular_window(51)
+    # window = hanning_window(N)
+    # hamming_window(N)
+    # window = blackman_window(N)
