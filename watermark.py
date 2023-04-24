@@ -2,25 +2,33 @@ from PIL import Image, ImageDraw, ImageFont
 import cv2
 import PyPDF2
 
-def add_watermark3():
-    # Tạo watermark
-    watermark = PyPDF2.PdfReader(open('watermark.pdf', 'rb'))
+def add_watermark(image_path, watermark_text):
+    # Mở ảnh và tạo đối tượng Image từ đường dẫn ảnh
+    image = Image.open(image_path)
 
-    # Tạo file output
-    output = PyPDF2.PdfWriter()
+    # Tạo một đối tượng ImageDraw để vẽ watermark lên ảnh
+    draw = ImageDraw.Draw(image)
 
-    # Đọc file input
-    input_file = PyPDF2.PdfReader(open('input.pdf', 'rb'))
+    # Tạo đối tượng Font và đặt kích thước của nó
+    font = ImageFont.truetype('impact.ttf', 36)
 
-    # Với mỗi trang trong file input, đặt watermark lên trang đó
-    for i in range(len(input_file.pages)):
-        page = input_file.pages[i]
-        page.merge_page(watermark.pages[0])
-        output.add_page(page)
+    # Tính toán kích thước của watermark
+    left, top, right, bottom = draw.textbbox((0, 0), watermark_text, font=font)
+    text_width = right - left
+    text_height = bottom - top
 
-    # Lưu kết quả vào file mới
-    with open('output.pdf', 'wb') as f:
-        output.write(f)
+    # Tính toán vị trí để đặt watermark ở giữa ảnh
+    x = (image.width - text_width) // 2
+    y = (image.height - text_height) // 2
+
+    # Đặt màu cho watermark (ở đây là màu đen)
+    text_color = (255, 255, 255)
+
+    # Vẽ watermark lên ảnh
+    draw.text((x, y), watermark_text, fill=text_color, font=font)
+
+    # Lưu ảnh mới đã có watermark
+    image.save('watermarked_image.jpg')
 
 def add_watermark2():
     # Tải video và mở video để đọc
@@ -67,33 +75,27 @@ def add_watermark2():
     video_out.release()
     cv2.destroyAllWindows()
 
-def add_watermark(image_path, watermark_text):
-    # Mở ảnh và tạo đối tượng Image từ đường dẫn ảnh
-    image = Image.open(image_path)
+def add_watermark3():
+    # Tạo watermark
+    watermark = PyPDF2.PdfReader(open('watermark.pdf', 'rb'))
 
-    # Tạo một đối tượng ImageDraw để vẽ watermark lên ảnh
-    draw = ImageDraw.Draw(image)
+    # Tạo file output
+    output = PyPDF2.PdfWriter()
 
-    # Tạo đối tượng Font và đặt kích thước của nó
-    font = ImageFont.truetype('impact.ttf', 36)
+    # Đọc file input
+    input_file = PyPDF2.PdfReader(open('input.pdf', 'rb'))
 
-    # Tính toán kích thước của watermark
-    left, top, right, bottom = draw.textbbox((0, 0), watermark_text, font=font)
-    text_width = right - left
-    text_height = bottom - top
+    # Với mỗi trang trong file input, đặt watermark lên trang đó
+    for i in range(len(input_file.pages)):
+        page = input_file.pages[i]
+        page.merge_page(watermark.pages[0])
+        output.add_page(page)
 
-    # Tính toán vị trí để đặt watermark ở giữa ảnh
-    x = (image.width - text_width) // 2
-    y = (image.height - text_height) // 2
+    # Lưu kết quả vào file mới
+    with open('output.pdf', 'wb') as f:
+        output.write(f)
 
-    # Đặt màu cho watermark (ở đây là màu đen)
-    text_color = (255, 255, 255)
-
-    # Vẽ watermark lên ảnh
-    draw.text((x, y), watermark_text, fill=text_color, font=font)
-
-    # Lưu ảnh mới đã có watermark
-    image.save('watermarked_image.jpg')
-
-# add_watermark('image.jpg', 'WATERMARK')
-add_watermark3()
+if __name__ == '__main__':
+    # add_watermark('image.jpg', 'WATERMARK')
+    # add_watermark2()
+    add_watermark3()
