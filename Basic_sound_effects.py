@@ -141,9 +141,9 @@ if __name__ == '__main__':
     input_file = 'BabyElephantWalk60.wav'
     output_file = 'reversal.wav'
     reversal(input_file, output_file)
-    # # Dãy giá trị alpha và delay
-    # alphas = [0.2, 0.4, 0.6, 0.8]
-    # delays = [0.1, 0.2, 0.3, 0.4]  # đơn vị giây
+    # Dãy giá trị alpha và delay
+    alphas = [0.2, 0.4, 0.45, 0.6]
+    delays = [0.1, 0.15, 0.2, 0.3]  # đơn vị giây
     # echo(input_file, output_file, alphas, delays)
     # fade_in(input_file, output_file, 0.8, 10)
     # fade_out(input_file, output_file, 0.95, 10)
@@ -154,6 +154,6 @@ if __name__ == '__main__':
     # modulation_rate = 0.25
     # flanger(input_file, output_file, delay_time, modulation_depth, modulation_rate)
     # vibrato(input_file, output_file, 10, 0.8, 0.3)
-    # depth = 0.5
-    # rate = 10
+    depth = 0.5
+    rate = 10
     # tremolo(input_file, output_file, rate, depth)
